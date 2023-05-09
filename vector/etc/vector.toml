@@ -1,0 +1,39 @@
+# STDIO Example
+# ------------------------------------------------------------------------------
+# A simple STDIN / STDOUT example. This script is used in the getting started
+# guide:
+#
+# https://vector.dev/guides/getting-started
+
+[sources.in]
+type = "file"
+include = ["/var/log/dmesg"]
+
+[sinks.out]
+inputs = ["in"]
+type = "console"
+encoding.codec = "raw_message"
+
+# Suricata evelogs
+[sources.evelogs]
+type = "redis"
+data_type = "channel"
+key = "suricata"
+url = "redis://redis:6379"
+
+# Print evelogs flow to stdout
+#[sinks.print]
+#type = "console"
+#inputs = ["evelogs"]
+#encoding.codec = "json"
+
+# Clickhouse evelogs table
+[sinks.clickhouse]
+type = "clickhouse"
+inputs = [ "evelogs" ]
+database = "suricata"
+endpoint = "http://clickhouse:8123"
+table = "evelogs"
+auth.strategy = "basic"
+auth.user = "clickhouse"
+auth.password = "00000000"

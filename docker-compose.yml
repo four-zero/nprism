@@ -1,0 +1,80 @@
+version: '3'
+services:
+  suricata:
+    image: jasonish/suricata:6.0
+    restart: always
+    network_mode: host
+    volumes:
+      - './suricata/etc:/etc/suricata'
+      - './suricata/lib:/var/lib/suricata'
+      - './suricata/log:/var/log/suricata'
+    command: -i eth0
+  redis:
+    image: bitnami/redis:7.0
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis_data:/bitnami/redis/data'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+        #- REDIS_PASSWORD=00000000
+      - REDIS_PORT_NUMBER=6379
+      - REDIS_AOF_ENABLED=no
+      - REDIS_IO_THREADS=1
+      - REDIS_IO_THREADS_DO_READS=yes
+  minio:
+    image: 'bitnami/minio:latest'
+    restart: always
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - 'minio_data:/data'
+    environment:
+      - MINIO_API_PORT_NUMBER=9000
+      - MINIO_CONSOLE_PORT_NUMBER=9001
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=00000000
+      - MINIO_DEFAULT_BUCKETS=evelogs:policy1,storages
+  vector:
+    image: timberio/vector:0.29.X-debian
+    restart: always
+    volumes:
+      - './vector/etc:/etc/vector'
+      - 'vector_data:/data'
+    ports:
+      - '8686:8686'
+  clickhouse:
+    user: root
+    image: bitnami/clickhouse:23
+    restart: always
+    volumes:
+      - ./clickhouse:/bitnami/clickhouse
+      - 'clickhouse_data:/data'
+    ports:
+      - "8123:8123"
+      - "9003:9003"
+      - "9004:9004"
+      - "9005:9005"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - CLICKHOUSE_ADMIN_USER=clickhouse
+      - CLICKHOUSE_ADMIN_PASSWORD=00000000
+      - LICKHOUSE_HTTP_PORT=8123
+      - CLICKHOUSE_TCP_PORT=9003
+      - CLICKHOUSE_MYSQL_PORT=9004
+      - CLICKHOUSE_POSTGRESQL_PORT=9005
+      - CLICKHOUSE_INTERSERVER_HTTP_PORT=9009
+
+volumes:
+  redis_data:
+    driver: local
+  minio_data:
+    driver: local
+  vector_data:
+    driver: local
+  clickhouse_data:
+    driver: local
+

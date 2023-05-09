@@ -1,0 +1,32 @@
+7/5/2023 -- 15:57:37 - <Notice> - This is Suricata version 6.0.11 RELEASE running in SYSTEM mode
+7/5/2023 -- 15:57:37 - <Info> - CPUs/cores online: 8
+7/5/2023 -- 15:57:37 - <Info> - Found an MTU of 1500 for 'eth0'
+7/5/2023 -- 15:57:37 - <Info> - Found an MTU of 1500 for 'eth0'
+7/5/2023 -- 15:57:37 - <Info> - fast output device (regular) initialized: fast.log
+7/5/2023 -- 15:57:37 - <Info> - stats output device (regular) initialized: stats.log
+7/5/2023 -- 15:57:37 - <Info> - Running in live mode, activating unix socket
+7/5/2023 -- 15:57:37 - <Warning> - [ERRCODE: SC_ERR_NO_RULES(42)] - No rule files match the pattern /var/lib/suricata/rules/suricata.rules
+7/5/2023 -- 15:57:37 - <Warning> - [ERRCODE: SC_ERR_NO_RULES_LOADED(43)] - 1 rule files specified, but no rules were loaded!
+7/5/2023 -- 15:57:37 - <Info> - Threshold config parsed: 0 rule(s) found
+7/5/2023 -- 15:57:37 - <Info> - 0 signatures processed. 0 are IP-only rules, 0 are inspecting packet payload, 0 inspect application layer, 0 are decoder event only
+7/5/2023 -- 15:57:38 - <Warning> - [ERRCODE: SC_ERR_SYSCALL(50)] - Failure when trying to set feature via ioctl for 'eth0': Operation not permitted (1)
+7/5/2023 -- 15:57:38 - <Warning> - [ERRCODE: SC_ERR_SYSCALL(50)] - Failure when trying to set feature via ioctl for 'eth0': Operation not permitted (1)
+7/5/2023 -- 15:57:38 - <Warning> - [ERRCODE: SC_ERR_SYSCALL(50)] - Failure when trying to set feature via ioctl for 'eth0': Operation not permitted (1)
+7/5/2023 -- 15:57:38 - <Info> - Going to use 8 thread(s)
+7/5/2023 -- 15:57:38 - <Info> - Running in live mode, activating unix socket
+7/5/2023 -- 15:57:38 - <Info> - Using unix socket file '/var/run/suricata/suricata-command.socket'
+7/5/2023 -- 15:57:38 - <Notice> - all 8 packet processing threads, 4 management threads initialized, engine started.
+7/5/2023 -- 15:57:39 - <Info> - All AFP capture threads are running.
+7/5/2023 -- 15:57:39 - <Notice> - Trying to connect to Redis
+7/5/2023 -- 15:57:39 - <Notice> - Connected to Redis.
+7/5/2023 -- 16:42:28 - <Notice> - Signal Received.  Stopping engine.
+7/5/2023 -- 16:42:29 - <Info> - time elapsed 2691.466s
+7/5/2023 -- 16:42:31 - <Info> - Alerts: 0
+7/5/2023 -- 16:42:31 - <Info> - QUIT Command sent to redis. Connection will terminate!
+7/5/2023 -- 16:42:31 - <Info> - Missing reply from redis, disconnected.
+7/5/2023 -- 16:42:31 - <Info> - Disconnecting from redis!
+7/5/2023 -- 16:42:31 - <Info> - cleaning up signature grouping structure... complete
+7/5/2023 -- 16:42:31 - <Notice> - Stats for 'eth0':  pkts: 95, drop: 0 (0.00%), invalid chksum: 0
+7/5/2023 -- 16:42:31 - <Warning> - [ERRCODE: SC_ERR_SYSCALL(50)] - Failure when trying to set feature via ioctl for 'eth0': Operation not permitted (1)
+7/5/2023 -- 16:42:31 - <Warning> - [ERRCODE: SC_ERR_SYSCALL(50)] - Failure when trying to set feature via ioctl for 'eth0': Operation not permitted (1)
+7/5/2023 -- 16:42:31 - <Warning> - [ERRCODE: SC_ERR_SYSCALL(50)] - Failure when trying to set feature via ioctl for 'eth0': Operation not permitted (1)
