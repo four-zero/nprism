@@ -1,17 +1,21 @@
-version: '3'
+version: '2'
 services:
   suricata:
+    container_name: suricata
     image: jasonish/suricata:6.0
-    restart: always
+    #restart: always
     network_mode: host
     volumes:
       - './suricata/etc:/etc/suricata'
       - './suricata/lib:/var/lib/suricata'
       - './suricata/log:/var/log/suricata'
-    command: -i eth0
+    command: -i p6p1
+    depends_on:
+      - redis
   redis:
+    container_name: redis
     image: bitnami/redis:7.0
-    restart: always
+    #restart: always
     ports:
       - '6379:6379'
     volumes:
@@ -24,34 +28,26 @@ services:
       - REDIS_AOF_ENABLED=no
       - REDIS_IO_THREADS=1
       - REDIS_IO_THREADS_DO_READS=yes
-  minio:
-    image: 'bitnami/minio:latest'
-    restart: always
-    ports:
-      - '9000:9000'
-      - '9001:9001'
-    volumes:
-      - 'minio_data:/data'
-    environment:
-      - MINIO_API_PORT_NUMBER=9000
-      - MINIO_CONSOLE_PORT_NUMBER=9001
-      - MINIO_ROOT_USER=minio
-      - MINIO_ROOT_PASSWORD=00000000
-      - MINIO_DEFAULT_BUCKETS=evelogs:policy1,storages
   vector:
+    container_name: vector
     image: timberio/vector:0.29.X-debian
-    restart: always
+    #restart: always
     volumes:
       - './vector/etc:/etc/vector'
       - 'vector_data:/data'
     ports:
       - '8686:8686'
+    depends_on:
+      - redis
+      - clickhouse
   clickhouse:
-    user: root
+    container_name: clickhouse
     image: bitnami/clickhouse:23
-    restart: always
+    #restart: always
     volumes:
       - ./clickhouse:/bitnami/clickhouse
+      - ./clickhouse/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./clickhouse/docker-entrypoint-startdb.d:/docker-entrypoint-startdb.d
       - 'clickhouse_data:/data'
     ports:
       - "8123:8123"
@@ -67,14 +63,31 @@ services:
       - CLICKHOUSE_MYSQL_PORT=9004
       - CLICKHOUSE_POSTGRESQL_PORT=9005
       - CLICKHOUSE_INTERSERVER_HTTP_PORT=9009
+  minio:
+    container_name: minio
+    image: 'bitnami/minio:latest'
+    #restart: always
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - 'minio_data:/data'
+    environment:
+      - MINIO_API_PORT_NUMBER=9000
+      - MINIO_CONSOLE_PORT_NUMBER=9001
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=00000000
+      - MINIO_DEFAULT_BUCKETS=evelogs:policy1,storages
 
 volumes:
-  redis_data:
+  suricata_data:
     driver: local
-  minio_data:
+  redis_data:
     driver: local
   vector_data:
     driver: local
   clickhouse_data:
+    driver: local
+  minio_data:
     driver: local
 

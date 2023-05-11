@@ -5,15 +5,6 @@
 #
 # https://vector.dev/guides/getting-started
 
-[sources.in]
-type = "file"
-include = ["/var/log/dmesg"]
-
-[sinks.out]
-inputs = ["in"]
-type = "console"
-encoding.codec = "raw_message"
-
 # Suricata evelogs
 [sources.evelogs]
 type = "redis"
@@ -21,19 +12,57 @@ data_type = "channel"
 key = "suricata"
 url = "redis://redis:6379"
 
-# Print evelogs flow to stdout
-#[sinks.print]
-#type = "console"
-#inputs = ["evelogs"]
-#encoding.codec = "json"
+# Parse evelogs
+# See the Vector Remap Language reference for more info: https://vrl.dev
+[transforms.evelog_parser]
+type = "remap"
+inputs = ["evelogs"]
+source = '''
+.message = parse_json!(.message)
+'''
+
+# Route evelogs by event_type
+[transforms.evelog_route]
+type = "route"
+inputs = [ "evelog_parser" ]
+route.flow = '.message.event_type == "flow"'
+route.stats = '.message.event_type == "stats"'
+
+[transforms.flow_parser]
+type = "remap"
+inputs = ["evelog_route.flow"]
+source = '''
+
+.flow_id = .message.flow_id
+.in_iface = .message.in_iface
+.src_ip = .message.src_ip
+.dest_ip = .message.dest_ip
+.src_port = .message.src_port
+.dest_port = .message.dest_port
+.proto = .message.proto
+.app_proto = .message.app_proto
+.event_type = .message.event_type
+.timestamp = to_unix_timestamp(parse_timestamp!(.message.timestamp, "%Y-%m-%dT%H:%M:%S%.6f%z"), "nanoseconds")
+
+del(.message)
+del(.source_type)
+
+'''
 
 # Clickhouse evelogs table
 [sinks.clickhouse]
 type = "clickhouse"
-inputs = [ "evelogs" ]
+inputs = [ "flow_parser" ]
 database = "suricata"
 endpoint = "http://clickhouse:8123"
 table = "evelogs"
 auth.strategy = "basic"
 auth.user = "clickhouse"
 auth.password = "00000000"
+
+# Print evelogs flow to stdout
+#[sinks.print]
+#type = "console"
+#inputs = ["flow_parser"]
+#encoding.codec = "json"
+
