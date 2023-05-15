@@ -63,6 +63,17 @@ services:
       - CLICKHOUSE_MYSQL_PORT=9004
       - CLICKHOUSE_POSTGRESQL_PORT=9005
       - CLICKHOUSE_INTERSERVER_HTTP_PORT=9009
+#  superset:
+#    container_name: superset
+#    image: apache/superset:latest
+#    #restart: always
+#    volumes:
+#      - 'superset_data:/data'
+#    ports:
+#      - "8008:8088"
+#    environment:
+#      - SUPERSET_SECRET_KEY=00000000
+
   minio:
     container_name: minio
     image: 'bitnami/minio:latest'
@@ -88,6 +99,8 @@ volumes:
     driver: local
   clickhouse_data:
     driver: local
+#  superset_data:
+#    driver: local
   minio_data:
     driver: local
 
