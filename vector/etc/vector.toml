@@ -33,16 +33,8 @@ type = "remap"
 inputs = ["evelog_route.flow"]
 source = '''
 
-.flow_id = .message.flow_id
-.in_iface = .message.in_iface
-.src_ip = .message.src_ip
-.dest_ip = .message.dest_ip
-.src_port = .message.src_port
-.dest_port = .message.dest_port
-.proto = .message.proto
-.app_proto = .message.app_proto
-.event_type = .message.event_type
-.timestamp = to_unix_timestamp(parse_timestamp!(.message.timestamp, "%Y-%m-%dT%H:%M:%S%.6f%z"), "nanoseconds")
+. = .message
+.timestamp = to_unix_timestamp(parse_timestamp!(.timestamp, "%Y-%m-%dT%H:%M:%S%.6f%z"), "nanoseconds")
 
 del(.message)
 del(.source_type)
