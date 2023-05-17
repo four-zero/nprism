@@ -9,9 +9,9 @@ services:
       - './suricata/etc:/etc/suricata'
       - './suricata/lib:/var/lib/suricata'
       - './suricata/log:/var/log/suricata'
-    command: -i p6p1
     depends_on:
       - redis
+    command: -i eth0
   redis:
     container_name: redis
     image: bitnami/redis:7.0
@@ -40,18 +40,19 @@ services:
     depends_on:
       - redis
       - clickhouse
+    command: -C /etc/vector
   clickhouse:
     container_name: clickhouse
     image: bitnami/clickhouse:23
     #restart: always
     volumes:
-      - ./clickhouse:/bitnami/clickhouse
-      - ./clickhouse/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-      - ./clickhouse/docker-entrypoint-startdb.d:/docker-entrypoint-startdb.d
+      - './clickhouse:/bitnami/clickhouse'
+      - './clickhouse/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
+      - './clickhouse/docker-entrypoint-startdb.d:/docker-entrypoint-startdb.d'
       - 'clickhouse_data:/data'
     ports:
       - "8123:8123"
-      - "9003:9003"
+      - "9003:9000"
       - "9004:9004"
       - "9005:9005"
     environment:
@@ -59,7 +60,7 @@ services:
       - CLICKHOUSE_ADMIN_USER=clickhouse
       - CLICKHOUSE_ADMIN_PASSWORD=00000000
       - LICKHOUSE_HTTP_PORT=8123
-      - CLICKHOUSE_TCP_PORT=9003
+      - CLICKHOUSE_TCP_PORT=9000
       - CLICKHOUSE_MYSQL_PORT=9004
       - CLICKHOUSE_POSTGRESQL_PORT=9005
       - CLICKHOUSE_INTERSERVER_HTTP_PORT=9009
