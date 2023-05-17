@@ -41,13 +41,13 @@ del(.source_type)
 
 '''
 
-# Clickhouse evelogs table
+# Clickhouse eveflow table
 [sinks.clickhouse]
 type = "clickhouse"
 inputs = [ "flow_parser" ]
 database = "suricata"
 endpoint = "http://clickhouse:8123"
-table = "evelogs"
+table = "eveflow"
 auth.strategy = "basic"
 auth.user = "clickhouse"
 auth.password = "00000000"
@@ -58,3 +58,6 @@ auth.password = "00000000"
 #inputs = ["flow_parser"]
 #encoding.codec = "json"
 
+[api]
+enabled = true
+address = "0.0.0.0:8686"

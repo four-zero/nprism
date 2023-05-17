@@ -1,0 +1,50 @@
+# STDIO Example
+# ------------------------------------------------------------------------------
+# A simple STDIN / STDOUT example. This script is used in the getting started
+# guide:
+#
+# https://vector.dev/guides/getting-started
+
+# Suricata evelog flow
+[sources.eveflow]
+type = "redis"
+data_type = "channel"
+key = "suricata.flow"
+url = "redis://redis:6379"
+
+# Parse evelog flow
+# See the Vector Remap Language reference for more info: https://vrl.dev
+[transforms.eveflow_parser]
+type = "remap"
+inputs = ["eveflow"]
+source = '''
+
+. = parse_json!(.message)
+
+.timestamp = to_unix_timestamp(parse_timestamp!(.timestamp, "%Y-%m-%dT%H:%M:%S%.6f%z"), "nanoseconds")
+
+del(.message)
+del(.source_type)
+
+'''
+
+# Clickhouse eveflow table
+[sinks.clickhouse]
+type = "clickhouse"
+inputs = [ "eveflow_parser" ]
+database = "suricata"
+endpoint = "http://clickhouse:8123"
+table = "eveflow"
+auth.strategy = "basic"
+auth.user = "clickhouse"
+auth.password = "00000000"
+
+# Print eveflow flow to stdout
+#[sinks.print]
+#type = "console"
+#inputs = ["eveflow"]
+#encoding.codec = "json"
+
+[api]
+enabled = true
+address = "0.0.0.0:8686"
