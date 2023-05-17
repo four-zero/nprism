@@ -78,14 +78,32 @@ stats:
 outputs:
   # a line based alerts log similar to Snort's fast.log
   - fast:
-      enabled: yes
+      enabled: no
       filename: fast.log
       append: yes
       #filetype: regular # 'regular', 'unix_stream' or 'unix_dgram'
 
-  # Extensible Event Format (nicknamed EVE) event log in JSON format
   - eve-log:
       enabled: yes
+      filetype: redis
+      ethernet: yes
+      redis:
+        server: 127.0.0.1
+        port: 6379
+        async: false ## if redis replies are read asynchronously
+        mode: publish ## possible values: list|lpush (default), rpush, channel|publish
+                   ## lpush and rpush are using a Redis list. "list" is an alias for lpush
+                   ## publish is using a Redis channel. "channel" is an alias for publish
+        key: suricata.flow ## key or channel to use (default to suricata)
+        pipelining:
+          enabled: yes ## set enable to yes to enable query pipelining
+          batch-size: 128 ## number of entries to keep in buffer
+      types:
+        - flow
+
+  # Extensible Event Format (nicknamed EVE) event log in JSON format
+  - eve-log:
+      enabled: no
       filetype: redis #regular|syslog|unix_dgram|unix_stream|redis
       filename: eve.json
       # Enable for multi-threaded eve.json output; output files are amended with
@@ -97,7 +115,7 @@ outputs:
       #facility: local5
       #level: Info ## possible levels: Emergency, Alert, Critical,
                    ## Error, Warning, Notice, Info, Debug
-      #ethernet: no  # log ethernet header in events when available
+      ethernet: yes  # log ethernet header in events when available
       redis:
         server: 127.0.0.1
         port: 6379
@@ -1055,7 +1073,7 @@ host-mode: auto
 # Number of packets preallocated per thread. The default is 1024. A higher number 
 # will make sure each CPU will be more easily kept busy, but may negatively 
 # impact caching.
-#max-pending-packets: 1024
+max-pending-packets: 8192
 
 # Runmode the engine should use. Please check --list-runmodes to get the available
 # runmodes for each packet acquisition method. Default depends on selected capture
@@ -1208,10 +1226,10 @@ defrag:
 # (which is the default).
 
 flow:
-  memcap: 128mb
+  memcap: 1024mb
   #memcap-policy: ignore
-  hash-size: 65536
-  prealloc: 10000
+  hash-size: 524288
+  prealloc: 40000
   emergency-recovery: 30
   #managers: 1 # default to one flow manager
   #recyclers: 1 # default to one flow recycler thread
@@ -1244,37 +1262,37 @@ vlan:
 flow-timeouts:
 
   default:
-    new: 30
-    established: 300
+    new: 3
+    established: 30
     closed: 0
-    bypassed: 100
-    emergency-new: 10
-    emergency-established: 100
+    bypassed: 10
+    emergency-new: 1
+    emergency-established: 10
     emergency-closed: 0
-    emergency-bypassed: 50
+    emergency-bypassed: 5
   tcp:
-    new: 60
-    established: 600
-    closed: 60
-    bypassed: 100
-    emergency-new: 5
-    emergency-established: 100
-    emergency-closed: 10
-    emergency-bypassed: 50
+    new: 6
+    established: 60
+    closed: 6
+    bypassed: 10
+    emergency-new: 1
+    emergency-established: 10
+    emergency-closed: 1
+    emergency-bypassed: 5
   udp:
-    new: 30
-    established: 300
-    bypassed: 100
-    emergency-new: 10
-    emergency-established: 100
-    emergency-bypassed: 50
+    new: 3
+    established: 30
+    bypassed: 10
+    emergency-new: 1
+    emergency-established: 10
+    emergency-bypassed: 5
   icmp:
-    new: 30
-    established: 300
-    bypassed: 100
-    emergency-new: 10
-    emergency-established: 100
-    emergency-bypassed: 50
+    new: 3
+    established: 30
+    bypassed: 10
+    emergency-new: 1
+    emergency-established: 10
+    emergency-bypassed: 5
 
 # Stream engine settings. Here the TCP stream tracking and reassembly
 # engine is configured.
@@ -1347,14 +1365,14 @@ flow-timeouts:
 #                               # is used in a rule.
 #
 stream:
-  memcap: 64mb
+  memcap: 256mb
   #memcap-policy: ignore
-  checksum-validation: yes      # reject incorrect csums
+  checksum-validation: no      # reject incorrect csums
   #midstream: false
   #midstream-policy: ignore
   inline: auto                  # auto will use inline mode in IPS mode, yes or no set it statically
   reassembly:
-    memcap: 256mb
+    memcap: 1024mb
     #memcap-policy: ignore
     depth: 1mb                  # reassemble 1mb into a stream
     toserver-chunk-size: 2560
@@ -1362,7 +1380,7 @@ stream:
     randomize-chunk-size: yes
     #randomize-chunk-range: 10
     #raw: yes
-    #segment-prealloc: 2048
+    segment-prealloc: 8192
     #check-overlap-different-data: true
 
 # Host table:
@@ -1370,9 +1388,9 @@ stream:
 # Host table is used by the tagging and per host thresholding subsystems.
 #
 host:
-  hash-size: 4096
-  prealloc: 1000
-  memcap: 32mb
+  hash-size: 16384
+  prealloc: 4000
+  memcap: 128mb
 
 # IP Pair table:
 #
@@ -1697,7 +1715,7 @@ capture:
   #
   # disable checksum validation. Same as setting '-k none' on the
   # commandline.
-  #checksum-validation: none
+  checksum-validation: none
 
 # Netmap support
 #
