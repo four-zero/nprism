@@ -1,4 +1,5 @@
+DROP TABLE IF EXISTS suricata.asset;
+DROP TABLE IF EXISTS suricata.asset_mv;
 DROP TABLE IF EXISTS suricata.eveflow;
-DROP TABLE IF EXISTS suricata.view_service;
 
 DROP DATABASE IF EXISTS suricata;

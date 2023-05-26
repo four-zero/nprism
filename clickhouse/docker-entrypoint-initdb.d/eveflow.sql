@@ -1,6 +1,4 @@
-CREATE DATABASE IF NOT EXISTS suricata;
-
-CREATE TABLE suricata.eveflow
+CREATE TABLE IF NOT EXISTS suricata.eveflow
 (
     `timestamp` DateTime64(9, 'Asia/Shanghai'),
     `flow_id` UInt64,
@@ -39,8 +37,8 @@ CREATE TABLE suricata.eveflow
             pkts_toclient UInt64,
             pkts_toserver UInt64
         ),
-        start String,
-        end String,
+        start DateTime64(9, 'Asia/Shanghai'),
+        end DateTime64(9, 'Asia/Shanghai'),
         age UInt64,
         emergency Bool,
         bypass LowCardinality(String),
@@ -86,15 +84,3 @@ ORDER BY timestamp
 TTL toDateTime(timestamp) + INTERVAL 1 HOUR
 SETTINGS index_granularity = 8192;
 
-CREATE VIEW suricata.view_service
-AS
-SELECT
-    dest_ip,
-    groupUniqArray(8)(proto) AS service_proto,
-    groupUniqArray(16)(dest_port) AS service_port,
-    min(flow.start) AS service_active_earliest,
-    max(flow.start) AS service_active_latest
-FROM suricata.eveflow
-WHERE (flow.pkts_toclient > 0) AND (flow.state != 'new')
-GROUP BY dest_ip
-ORDER BY service_active_latest DESC;

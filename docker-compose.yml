@@ -9,6 +9,7 @@ services:
       - './suricata/etc:/etc/suricata'
       - './suricata/lib:/var/lib/suricata'
       - './suricata/log:/var/log/suricata'
+      - 'suricata_data:/data'
     depends_on:
       - redis
     command: -i eth0
@@ -19,7 +20,7 @@ services:
     ports:
       - '6379:6379'
     volumes:
-      - 'redis_data:/bitnami/redis/data'
+      - 'redis_data:/data'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
