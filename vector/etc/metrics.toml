@@ -1,0 +1,26 @@
+# STDIO Example
+# ------------------------------------------------------------------------------
+# A simple STDIN / STDOUT example. This script is used in the getting started
+# guide:
+#
+# https://vector.dev/guides/getting-started
+
+#[sources.metrics]
+#type = "internal_metrics"
+#
+#[transforms.parse_metrics]
+#type = "metric_to_log"
+#inputs = [ "metrics" ]
+#host_tag = "182"
+#
+#[sinks.file]
+#type = "file"
+#inputs = [ "parse_metrics" ]
+#path = "/data/vector-metrics.log"
+#encoding.codec = "json"
+
+# Print evestats stats to stdout
+#[sinks.print]
+#type = "console"
+#inputs = ["evestats"]
+#encoding.codec = "json"
