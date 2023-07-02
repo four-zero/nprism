@@ -1,0 +1,50 @@
+# STDIO Example
+# ------------------------------------------------------------------------------
+# A simple STDIN / STDOUT example. This script is used in the getting started
+# guide:
+#
+# https://vector.dev/guides/getting-started
+
+# Suricata evelog stats
+[sources.suricata_evestats]
+type = "redis"
+data_type = "channel"
+key = "suricata.stats"
+url = "redis://redis:6379"
+
+# Parse evelog stats
+# See the Vector Remap Language reference for more info: https://vrl.dev
+[transforms.evestats_parser]
+type = "remap"
+inputs = ["suricata_evestats"]
+source = '''
+
+. = parse_json!(.message)
+
+.timestamp = to_unix_timestamp(parse_timestamp!(.timestamp, "%Y-%m-%dT%H:%M:%S%.6f%z"), "nanoseconds")
+
+del(.message)
+del(.source_type)
+
+'''
+
+# Clickhouse evestats table
+[sinks.clickhouse_evestats]
+type = "clickhouse"
+inputs = [ "evestats_parser" ]
+database = "suricata"
+endpoint = "http://clickhouse:8123"
+table = "evestats"
+auth.strategy = "basic"
+auth.user = "clickhouse"
+auth.password = "00000000"
+
+# Print evestats stats to stdout
+#[sinks.print]
+#type = "console"
+#inputs = ["evestats"]
+#encoding.codec = "json"
+
+[api]
+enabled = true
+address = "0.0.0.0:8686"
