@@ -6,7 +6,7 @@
 # https://vector.dev/guides/getting-started
 
 # Suricata evelog flow
-[sources.eveflow]
+[sources.suricata_eveflow]
 type = "redis"
 data_type = "channel"
 key = "suricata.flow"
@@ -16,7 +16,7 @@ url = "redis://redis:6379"
 # See the Vector Remap Language reference for more info: https://vrl.dev
 [transforms.eveflow_parser]
 type = "remap"
-inputs = ["eveflow"]
+inputs = ["suricata_eveflow"]
 source = '''
 
 . = parse_json!(.message)
@@ -31,7 +31,7 @@ del(.source_type)
 '''
 
 # Clickhouse eveflow table
-[sinks.clickhouse]
+[sinks.clickhouse_eveflow]
 type = "clickhouse"
 inputs = [ "eveflow_parser" ]
 database = "suricata"
