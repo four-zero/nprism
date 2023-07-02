@@ -81,6 +81,6 @@ ENGINE = MergeTree()
 PARTITION BY toYYYYMMDD(timestamp)
 PRIMARY KEY timestamp
 ORDER BY timestamp
-TTL toDateTime(timestamp) + INTERVAL 1 HOUR
+TTL toDateTime(timestamp) + INTERVAL 7 DAY
 SETTINGS index_granularity = 8192;
 

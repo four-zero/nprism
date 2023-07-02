@@ -13,7 +13,10 @@ CREATE TABLE IF NOT EXISTS suricata.asset
     `active_earliest` DateTime64(9, 'Asia/Shanghai'),
     `active_latest` DateTime64(9, 'Asia/Shanghai')
 )
-ENGINE = Memory;
+ENGINE = MergeTree()
+PARTITION BY toYYYYMMDD(active_latest)
+PRIMARY KEY active_latest
+ORDER BY active_latest;
 
 CREATE MATERIALIZED VIEW suricata.asset_mv TO suricata.asset AS
 SELECT
