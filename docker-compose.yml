@@ -76,21 +76,21 @@ services:
 #    environment:
 #      - SUPERSET_SECRET_KEY=00000000
 
-  minio:
-    container_name: minio
-    image: 'bitnami/minio:latest'
-    #restart: always
-    ports:
-      - '9000:9000'
-      - '9001:9001'
-    volumes:
-      - 'minio_data:/data'
-    environment:
-      - MINIO_API_PORT_NUMBER=9000
-      - MINIO_CONSOLE_PORT_NUMBER=9001
-      - MINIO_ROOT_USER=minio
-      - MINIO_ROOT_PASSWORD=00000000
-      - MINIO_DEFAULT_BUCKETS=evelogs:policy1,storages
+#  minio:
+#    container_name: minio
+#    image: 'bitnami/minio:latest'
+#    #restart: always
+#    ports:
+#      - '9000:9000'
+#      - '9001:9001'
+#    volumes:
+#      - 'minio_data:/data'
+#    environment:
+#      - MINIO_API_PORT_NUMBER=9000
+#      - MINIO_CONSOLE_PORT_NUMBER=9001
+#      - MINIO_ROOT_USER=minio
+#      - MINIO_ROOT_PASSWORD=00000000
+#      - MINIO_DEFAULT_BUCKETS=evelogs:policy1,storages
 
 volumes:
   suricata_data:
@@ -103,6 +103,6 @@ volumes:
     driver: local
 #  superset_data:
 #    driver: local
-  minio_data:
-    driver: local
+#  minio_data:
+#    driver: local
 
