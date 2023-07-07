@@ -1,5 +1,19 @@
 # nprism
 
+# install nprism
+```
+git clone https://github.com/four-zero/nprism.git
+cd nprism
+
+for offline images load:
+tar -xzvf images.tgz -C images/
+./script/docker_load.sh
+
+./script/chmod.sh
+docker-compose -f docker-compose.yml up -d
+docker-compose -f docker-compose.yml down
+```
+
 ## suricata
 input:
     capture from some interface like: eth0
