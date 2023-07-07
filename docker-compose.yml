@@ -76,6 +76,16 @@ services:
 #    environment:
 #      - SUPERSET_SECRET_KEY=00000000
 
+#  grafana:
+#    image: docker.io/bitnami/grafana:9
+#    ports:
+#      - '3000:3000'
+#    environment:
+#      - 'GF_SECURITY_ADMIN_PASSWORD=00000000'
+#    volumes:
+#      - grafana_data:/opt/bitnami/grafana/data
+
+
 #  minio:
 #    container_name: minio
 #    image: 'bitnami/minio:latest'
@@ -105,4 +115,6 @@ volumes:
 #    driver: local
 #  minio_data:
 #    driver: local
+  grafana_data:
+    driver: local
 
