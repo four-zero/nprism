@@ -9,9 +9,14 @@ for offline images load:
 tar -xzvf images.tgz -C images/
 ./script/docker_load.sh
 
+
+for custom capture interface:
+sed -i 's/-i eth0/-i yourinterface/' docker-compose.yml
+
 ./script/chmod.sh
 docker-compose -f docker-compose.yml up -d
 docker-compose -f docker-compose.yml down
+
 ```
 
 ## suricata
