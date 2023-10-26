@@ -1,7 +1,7 @@
 version: '2'
 services:
   suricata:
-    container_name: suricata
+    container_name: nprism_suricata
     image: jasonish/suricata:6.0
     #restart: always
     network_mode: host
@@ -14,7 +14,7 @@ services:
       - redis
     command: -i eth0
   redis:
-    container_name: redis
+    container_name: nprism_redis
     image: bitnami/redis:7.0
     #restart: always
     ports:
@@ -30,7 +30,7 @@ services:
       - REDIS_IO_THREADS=1
       - REDIS_IO_THREADS_DO_READS=yes
   vector:
-    container_name: vector
+    container_name: nprism_vector
     image: timberio/vector:0.29.X-debian
     #restart: always
     volumes:
@@ -43,7 +43,7 @@ services:
       - clickhouse
     command: -C /etc/vector
   clickhouse:
-    container_name: clickhouse
+    container_name: nprism_clickhouse
     image: bitnami/clickhouse:23
     #restart: always
     volumes:
@@ -66,7 +66,7 @@ services:
       - CLICKHOUSE_POSTGRESQL_PORT=9005
       - CLICKHOUSE_INTERSERVER_HTTP_PORT=9009
 #  superset:
-#    container_name: superset
+#    container_name: nprism_superset
 #    image: apache/superset:latest
 #    #restart: always
 #    volumes:
@@ -76,18 +76,19 @@ services:
 #    environment:
 #      - SUPERSET_SECRET_KEY=00000000
 
-#  grafana:
-#    image: docker.io/bitnami/grafana:9
-#    ports:
-#      - '3000:3000'
-#    environment:
-#      - 'GF_SECURITY_ADMIN_PASSWORD=00000000'
-#    volumes:
-#      - grafana_data:/opt/bitnami/grafana/data
+  grafana:
+    container_name: nprism_grafana
+    image: docker.io/bitnami/grafana:9
+    ports:
+      - '3000:3000'
+    environment:
+      - 'GF_SECURITY_ADMIN_PASSWORD=00000000'
+    volumes:
+      - grafana_data:/opt/bitnami/grafana/data
 
 
 #  minio:
-#    container_name: minio
+#    container_name: nprism_minio
 #    image: 'bitnami/minio:latest'
 #    #restart: always
 #    ports:

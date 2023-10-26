@@ -10,7 +10,7 @@
 type = "redis"
 data_type = "channel"
 key = "suricata.flow"
-url = "redis://redis:6379"
+url = "redis://nprism_redis:6379"
 
 # Parse evelog flow
 # See the Vector Remap Language reference for more info: https://vrl.dev
@@ -35,7 +35,7 @@ del(.source_type)
 type = "clickhouse"
 inputs = [ "eveflow_parser" ]
 database = "suricata"
-endpoint = "http://clickhouse:8123"
+endpoint = "http://nprism_clickhouse:8123"
 table = "eveflow"
 auth.strategy = "basic"
 auth.user = "clickhouse"
