@@ -6,7 +6,10 @@ clickhouse-client -u clickhouse --password 00000000 --multiquery </docker-entryp
 
 clickhouse-client -u clickhouse --password 00000000 --multiquery </docker-entrypoint-initdb.d/eveflow.sql
 
+clickhouse-client -u clickhouse --password 00000000 --multiquery </docker-entrypoint-initdb.d/eveapplayer.sql
+
 clickhouse-client -u clickhouse --password 00000000 --multiquery </docker-entrypoint-initdb.d/evestats.sql
 
 clickhouse-client -u clickhouse --password 00000000 --multiquery </docker-entrypoint-initdb.d/asset.sql
+
 
