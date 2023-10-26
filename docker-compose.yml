@@ -2,7 +2,7 @@ version: '2'
 services:
   suricata:
     container_name: nprism_suricata
-    image: jasonish/suricata:6.0
+    image: jasonish/suricata:7.0
     #restart: always
     network_mode: host
     volumes:
